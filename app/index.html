@@ -8,15 +8,22 @@
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0d1117;
-    --surface: #161b22;
-    --border: #30363d;
-    --text: #e6edf3;
-    --muted: #8b949e;
-    --nb: #3b82f6;
-    --ev: #f59e0b;
-    --accent: #58a6ff;
-    --danger: #f85149;
+    --bg:       #0b0f14;
+    --surface:  #131920;
+    --surface2: #1a2232;
+    --border:   #2a3548;
+    --border-hi:#3d5270;
+    --text:     #e2eaf5;
+    --muted:    #7a8fa8;
+    --nb:       #4a9eff;
+    --nb-dim:   #1a3a6e;
+    --nb-glow:  rgba(74,158,255,0.18);
+    --ev:       #f0a030;
+    --ev-dim:   #5a3800;
+    --ev-glow:  rgba(240,160,48,0.18);
+    --accent:   #4a9eff;
+    --danger:   #f85149;
+    --goal-green: #2ea043;
   }
 
   body {
@@ -28,26 +35,36 @@
   }
 
   /* ── Layout ── */
-  .page { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+  .page { max-width: 1100px; margin: 0 auto; padding: 0 24px 60px; }
 
   /* ── Header ── */
   header {
     border-bottom: 1px solid var(--border);
-    padding: 20px 0 16px;
-    margin-bottom: 24px;
+    padding: 24px 0 18px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    flex-wrap: wrap;
   }
-  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: var(--text);
+  }
   header h1 span { color: var(--nb); }
   .synthetic-badge {
-    display: inline-block;
-    margin-top: 4px;
-    background: #5a3e00;
-    border: 1px solid #f59e0b88;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: linear-gradient(135deg, #3d2800 0%, #5a3800 100%);
+    border: 1px solid var(--ev);
     color: var(--ev);
     font-size: 11px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    padding: 2px 8px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    padding: 3px 10px;
     border-radius: 4px;
     text-transform: uppercase;
   }
@@ -56,17 +73,27 @@
   .card {
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 16px;
+    border-radius: 10px;
+    padding: 24px;
+    margin-bottom: 18px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.35);
   }
   .card-title {
-    font-size: 11px;
-    font-weight: 600;
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.8px;
+    letter-spacing: 1.2px;
     color: var(--muted);
-    margin-bottom: 14px;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
   }
 
   /* ── Scoreboard ── */
@@ -74,55 +101,101 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    padding: 12px 0;
+    gap: 32px;
+    padding: 8px 0 20px;
   }
-  .team-name { font-size: 18px; font-weight: 700; }
+  .team-block { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .team-name {
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: -0.3px;
+    text-align: center;
+  }
   .team-name.nb { color: var(--nb); }
   .team-name.ev { color: var(--ev); }
-  .score { font-size: 48px; font-weight: 800; letter-spacing: -2px; }
+  .team-abbr {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .score-divider { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+  .score {
+    font-size: 72px;
+    font-weight: 900;
+    letter-spacing: -4px;
+    color: var(--text);
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .score-vs { font-size: 11px; color: var(--muted); letter-spacing: 1px; }
 
   /* ── Possession Bar ── */
-  .poss-bar-wrap { margin-top: 8px; }
+  .poss-bar-wrap { margin-top: 4px; }
   .poss-labels {
     display: flex;
     justify-content: space-between;
-    font-size: 20px;
-    font-weight: 700;
-    margin-bottom: 6px;
+    align-items: baseline;
+    margin-bottom: 8px;
   }
-  .poss-labels .nb { color: var(--nb); }
-  .poss-labels .ev { color: var(--ev); }
+  .poss-pct {
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .poss-pct.nb { color: var(--nb); }
+  .poss-pct.ev { color: var(--ev); }
+  .poss-center-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
   .bar-track {
-    height: 18px;
-    border-radius: 9px;
+    height: 22px;
+    border-radius: 11px;
     overflow: hidden;
-    background: var(--ev);
+    background: var(--ev-dim);
+    border: 1px solid var(--border);
     display: flex;
+    position: relative;
   }
   .bar-nb {
     height: 100%;
-    background: var(--nb);
-    border-radius: 9px 0 0 9px;
+    background: linear-gradient(90deg, var(--nb-dim) 0%, var(--nb) 100%);
+    border-radius: 11px 0 0 11px;
+    position: relative;
   }
   .poss-method {
-    margin-top: 6px;
-    font-size: 12px;
+    margin-top: 8px;
+    font-size: 11.5px;
     color: var(--muted);
     font-style: italic;
+    text-align: center;
   }
 
   /* ── Two-column stats ── */
   .stats-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 16px;
     margin-top: 4px;
   }
-  .stat-block { display: flex; flex-direction: column; gap: 4px; }
-  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-  .stat-row { display: flex; justify-content: space-between; }
-  .stat-val { font-size: 15px; font-weight: 600; }
+  .stat-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .stat-block.nb-block { border-top: 3px solid var(--nb); }
+  .stat-block.ev-block { border-top: 3px solid var(--ev); }
+  .stat-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; font-weight: 600; }
+  .stat-val { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; font-variant-numeric: tabular-nums; }
   .stat-val.nb { color: var(--nb); }
   .stat-val.ev { color: var(--ev); }
 
@@ -132,90 +205,112 @@
   .bar-nb-el { fill: var(--nb); }
   .bar-ev-el { fill: var(--ev); }
   .chart-label { font-size: 11px; fill: var(--muted); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
-  .chart-val { font-size: 10px; fill: var(--text); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
-  .highlight-rect { fill: #ffffff10; stroke: #ffffff30; stroke-width: 1; }
+  .chart-val   { font-size: 10.5px; font-weight: 600; font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+  .chart-val-nb { fill: var(--nb); }
+  .chart-val-ev { fill: var(--ev); }
+  .highlight-rect { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.14); stroke-width: 1.5; }
 
   /* ── Top-5 Quick Links ── */
   .top5-links { display: flex; flex-wrap: wrap; gap: 8px; }
   .poss-btn {
-    background: #1f2937;
+    background: var(--surface2);
     border: 1px solid var(--border);
-    color: var(--accent);
+    color: var(--nb);
     border-radius: 6px;
-    padding: 5px 12px;
+    padding: 5px 13px;
     font-size: 12px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: background 0.13s, border-color 0.13s;
+    font-family: monospace;
+    letter-spacing: 0.3px;
   }
-  .poss-btn:hover, .poss-btn.active { background: #1d3a6e; border-color: var(--nb); }
+  .poss-btn:hover { background: var(--nb-dim); border-color: var(--nb); }
+  .poss-btn.active { background: var(--nb-dim); border-color: var(--nb); box-shadow: 0 0 0 1px var(--nb); }
 
   /* ── Inspector ── */
   .inspector-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
   .inspector-input {
     flex: 1;
-    background: #0d1117;
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 12px;
+    border-radius: 7px;
+    padding: 8px 13px;
     font-size: 14px;
     color: var(--text);
     outline: none;
     font-family: monospace;
+    transition: border-color 0.13s;
   }
-  .inspector-input:focus { border-color: var(--accent); }
+  .inspector-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--nb-glow); }
   .go-btn {
     background: var(--nb);
     border: none;
-    border-radius: 6px;
-    padding: 7px 18px;
+    border-radius: 7px;
+    padding: 8px 20px;
     color: #fff;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+    transition: opacity 0.13s;
+    letter-spacing: 0.2px;
   }
-  .go-btn:hover { opacity: 0.85; }
+  .go-btn:hover { opacity: 0.82; }
 
   .poss-detail-header {
     display: flex;
     align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
     flex-wrap: wrap;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
   }
   .poss-id-badge {
-    font-size: 15px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 800;
     color: var(--accent);
     font-family: monospace;
+    letter-spacing: 0.5px;
   }
-  .poss-meta { font-size: 12px; color: var(--muted); }
-  .poss-meta span { color: var(--text); }
+  .poss-meta {
+    font-size: 12px;
+    color: var(--muted);
+    padding: 2px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+  }
+  .poss-meta span { color: var(--text); font-weight: 600; }
 
   /* ── SVG Pitch ── */
-  .pitch-wrap { width: 100%; overflow-x: auto; margin-bottom: 12px; }
+  .pitch-wrap { width: 100%; overflow-x: auto; margin-bottom: 14px; }
   svg.pitch {
     display: block;
     background: #1a3020;
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 8px;
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.4);
   }
-  .pitch-line { stroke: #ffffff40; stroke-width: 1; fill: none; }
-  .pitch-line-bold { stroke: #ffffff60; stroke-width: 1.5; fill: none; }
+  .pitch-line { stroke: rgba(255,255,255,0.22); stroke-width: 1; fill: none; }
+  .pitch-line-bold { stroke: rgba(255,255,255,0.38); stroke-width: 1.5; fill: none; }
   .event-dot { cursor: pointer; }
   .event-tooltip {
     position: fixed;
     pointer-events: none;
-    background: #1e2a38;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 6px 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border-hi);
+    border-radius: 7px;
+    padding: 8px 12px;
     font-size: 12px;
     color: var(--text);
     z-index: 100;
-    max-width: 220px;
-    line-height: 1.4;
+    max-width: 240px;
+    line-height: 1.5;
     display: none;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
   }
 
   /* ── Events Table ── */
@@ -223,71 +318,97 @@
   .events-table th {
     text-align: left;
     color: var(--muted);
-    font-weight: 600;
-    padding: 4px 8px;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    padding: 6px 10px;
     border-bottom: 1px solid var(--border);
+    background: var(--surface2);
   }
-  .events-table td { padding: 4px 8px; border-bottom: 1px solid #21262d; }
+  .events-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(42,53,72,0.6);
+  }
   .events-table tr:last-child td { border-bottom: none; }
-  .ev-shot { color: var(--ev); font-weight: 600; }
-  .ev-goal { color: #2ea043; font-weight: 700; }
+  .events-table tr:hover td { background: rgba(74,158,255,0.05); }
+  .ev-shot { color: var(--ev); font-weight: 700; }
+  .ev-goal { color: var(--goal-green); font-weight: 800; }
   .ev-tackle { color: var(--danger); }
 
   /* ── Agent Panel ── */
-  .agent-btns { display: flex; gap: 8px; margin-bottom: 12px; }
+  .agent-btns { display: flex; gap: 10px; margin-bottom: 14px; flex-wrap: wrap; }
   .agent-btn {
-    background: #21262d;
+    background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 6px;
+    border-radius: 7px;
     color: var(--text);
-    padding: 6px 16px;
+    padding: 7px 18px;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+    transition: background 0.13s, border-color 0.13s;
+    letter-spacing: 0.2px;
   }
-  .agent-btn:hover { background: #30363d; }
-  .agent-btn.running { opacity: 0.6; cursor: default; }
+  .agent-btn:hover { background: var(--border); border-color: var(--border-hi); }
+  .agent-btn.running { opacity: 0.55; cursor: default; }
 
-  .question-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .question-row { display: flex; gap: 8px; margin-bottom: 14px; }
   .question-input {
     flex: 1;
-    background: #0d1117;
+    background: var(--bg);
     border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 7px 12px;
+    border-radius: 7px;
+    padding: 8px 13px;
     font-size: 14px;
     color: var(--text);
     outline: none;
+    transition: border-color 0.13s;
   }
-  .question-input:focus { border-color: var(--accent); }
+  .question-input:focus { border-color: var(--accent); box-shadow: 0 0 0 2px var(--nb-glow); }
   .ask-btn {
-    background: #1f6feb;
+    background: var(--nb);
     border: none;
-    border-radius: 6px;
-    padding: 7px 18px;
+    border-radius: 7px;
+    padding: 8px 20px;
     color: #fff;
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 700;
     cursor: pointer;
+    transition: opacity 0.13s;
   }
-  .ask-btn:hover { opacity: 0.85; }
+  .ask-btn:hover { opacity: 0.82; }
 
+  /* Agent output — styled as analyst card */
   .agent-output {
-    background: #0d1117;
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 14px;
+    background: var(--surface2);
+    border: 1px solid var(--border-hi);
+    border-left: 3px solid var(--nb);
+    border-radius: 8px;
+    padding: 16px 18px;
     white-space: pre-wrap;
-    font-size: 12.5px;
+    font-size: 13px;
     color: var(--text);
-    line-height: 1.65;
+    line-height: 1.75;
     min-height: 80px;
     display: none;
   }
   .agent-output.visible { display: block; }
 
-  /* Citations */
-  .citation { color: #58a6ff; font-weight: 600; }
+  /* Citation chips */
+  .citation {
+    display: inline-block;
+    background: rgba(74,158,255,0.14);
+    border: 1px solid rgba(74,158,255,0.35);
+    color: var(--nb);
+    font-weight: 700;
+    font-size: 11px;
+    padding: 0px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    letter-spacing: 0.3px;
+    vertical-align: baseline;
+  }
 
   /* Loading spinner */
   .spinner {
@@ -305,11 +426,12 @@
   .empty-state { color: var(--muted); font-style: italic; font-size: 13px; }
 
   /* ── Two-col layout ── */
-  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-  @media (max-width: 600px) {
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 640px) {
     .two-col { grid-template-columns: 1fr; }
-    .scoreboard { flex-direction: column; gap: 4px; }
-    .score { font-size: 36px; }
+    .scoreboard { flex-direction: column; gap: 8px; }
+    .score { font-size: 52px; }
+    .team-name { font-size: 17px; }
   }
 </style>
 </head>
@@ -326,15 +448,24 @@
   <div class="card">
     <div class="card-title">Match Result · SYNTH-001</div>
     <div class="scoreboard">
-      <div class="team-name nb">Northbridge City</div>
-      <div class="score">4 – 3</div>
-      <div class="team-name ev">Eastvale United</div>
+      <div class="team-block">
+        <div class="team-name nb">Northbridge City</div>
+        <div class="team-abbr">NB</div>
+      </div>
+      <div class="score-divider">
+        <div class="score">4 – 3</div>
+        <div class="score-vs">FULL TIME</div>
+      </div>
+      <div class="team-block">
+        <div class="team-name ev">Eastvale United</div>
+        <div class="team-abbr">EV</div>
+      </div>
     </div>
-    <div class="poss-bar-wrap" style="margin-top:20px;">
+    <div class="poss-bar-wrap" style="margin-top:16px;">
       <div class="poss-labels">
-        <span class="nb">65.46%</span>
-        <span style="font-size:12px;color:var(--muted);align-self:center;">possession</span>
-        <span class="ev">34.54%</span>
+        <span class="poss-pct nb">65.46%</span>
+        <span class="poss-center-label">possession</span>
+        <span class="poss-pct ev">34.54%</span>
       </div>
       <div class="bar-track">
         <div class="bar-nb" style="width:65.46%"></div>
@@ -347,7 +478,7 @@
   <div class="card">
     <div class="card-title">Possession by 15-Minute Window</div>
     <div class="chart-wrap">
-      <svg id="windowChart" class="bar-chart" viewBox="0 0 900 220" width="900" height="220"></svg>
+      <svg id="windowChart" class="bar-chart" viewBox="0 0 1040 260" width="1040" height="260"></svg>
     </div>
   </div>
 
@@ -356,11 +487,11 @@
     <div class="card">
       <div class="card-title">Field Tilt (Final-Third Share)</div>
       <div class="stats-grid">
-        <div class="stat-block">
+        <div class="stat-block nb-block">
           <div class="stat-label">Northbridge City</div>
           <div class="stat-val nb">73.25%</div>
         </div>
-        <div class="stat-block">
+        <div class="stat-block ev-block">
           <div class="stat-label">Eastvale United</div>
           <div class="stat-val ev">26.75%</div>
         </div>
@@ -369,11 +500,11 @@
     <div class="card">
       <div class="card-title">Directness (m/s of possession)</div>
       <div class="stats-grid">
-        <div class="stat-block">
+        <div class="stat-block nb-block">
           <div class="stat-label">Northbridge City</div>
           <div class="stat-val nb">1.087 m/s</div>
         </div>
-        <div class="stat-block">
+        <div class="stat-block ev-block">
           <div class="stat-label">Eastvale United</div>
           <div class="stat-val ev">1.988 m/s</div>
         </div>
@@ -437,23 +568,25 @@ const API = '';  // same origin
   ];
 
   const svg = document.getElementById('windowChart');
-  const W = 900, H = 220;
-  const marginLeft = 44, marginRight = 16, marginTop = 12, marginBottom = 32;
+  const W = 1040, H = 260;
+  const marginLeft = 48, marginRight = 20, marginTop = 16, marginBottom = 52;
   const chartW = W - marginLeft - marginRight;
   const chartH = H - marginTop - marginBottom;
   const n = windows.length;
   const groupW = chartW / n;
-  const barW = Math.floor(groupW * 0.36);
+  const barW = Math.floor(groupW * 0.34);
   const gap = Math.floor(groupW * 0.06);
-  const NS = '#3b82f6', EV = '#f59e0b';
+  const NB_COLOR = '#4a9eff', EV_COLOR = '#f0a030';
 
   let html = '';
 
   // Y axis guides
   for (let pct = 0; pct <= 100; pct += 25) {
     const y = marginTop + chartH - (pct / 100) * chartH;
-    html += `<line x1="${marginLeft}" y1="${y}" x2="${W - marginRight}" y2="${y}" stroke="#30363d" stroke-width="0.5"/>`;
-    html += `<text x="${marginLeft - 4}" y="${y + 4}" text-anchor="end" class="chart-label">${pct}</text>`;
+    const isZero = pct === 0;
+    html += `<line x1="${marginLeft}" y1="${y}" x2="${W - marginRight}" y2="${y}"
+      stroke="${isZero ? '#3d5270' : '#2a3548'}" stroke-width="${isZero ? 1 : 0.5}"/>`;
+    html += `<text x="${marginLeft - 6}" y="${y + 4}" text-anchor="end" class="chart-label">${pct}</text>`;
   }
 
   windows.forEach((w, i) => {
@@ -462,39 +595,43 @@ const API = '';  // same origin
     const evH = (w.EV / 100) * chartH;
     const nbY = marginTop + chartH - nbH;
     const evY = marginTop + chartH - evH;
+    const isHighlight = w.label === '90-105';
 
     // Highlight 90-105
-    if (w.label === '90-105') {
-      html += `<rect class="highlight-rect" x="${x0 - gap * 0.5}" y="${marginTop}"
-        width="${groupW}" height="${chartH}" rx="3"/>`;
+    if (isHighlight) {
+      html += `<rect class="highlight-rect" x="${x0 - gap * 0.8}" y="${marginTop - 6}"
+        width="${groupW + gap * 0.2}" height="${chartH + 6}" rx="5"/>`;
     }
 
-    // NB bar
-    html += `<rect class="bar-nb-el" x="${x0}" y="${nbY}" width="${barW}" height="${nbH}" rx="2"/>`;
-    html += `<text class="chart-val" x="${x0 + barW / 2}" y="${nbY - 3}" text-anchor="middle">${w.NB.toFixed(1)}</text>`;
+    // NB bar — rounded top
+    html += `<rect class="bar-nb-el" x="${x0}" y="${nbY}" width="${barW}" height="${nbH}" rx="3 3 0 0"/>`;
+    html += `<text class="chart-val chart-val-nb" x="${x0 + barW / 2}" y="${nbY - 5}" text-anchor="middle">${w.NB.toFixed(1)}</text>`;
 
     // EV bar
     const evX = x0 + barW + gap;
-    html += `<rect class="bar-ev-el" x="${evX}" y="${evY}" width="${barW}" height="${evH}" rx="2"/>`;
-    html += `<text class="chart-val" x="${evX + barW / 2}" y="${evY - 3}" text-anchor="middle">${w.EV.toFixed(1)}</text>`;
+    html += `<rect class="bar-ev-el" x="${evX}" y="${evY}" width="${barW}" height="${evH}" rx="3 3 0 0"/>`;
+    html += `<text class="chart-val chart-val-ev" x="${evX + barW / 2}" y="${evY - 5}" text-anchor="middle">${w.EV.toFixed(1)}</text>`;
 
-    // label
+    // Window label
     const labelX = x0 + barW + gap / 2;
-    html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 14}" text-anchor="middle">${w.label}</text>`;
-    if (w.label === '90-105') {
-      html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 25}" text-anchor="middle" fill="#f59e0b">★ NB peak</text>`;
+    html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 16}" text-anchor="middle"
+      ${isHighlight ? 'fill="#e2eaf5" font-weight="700"' : ''}>${w.label}</text>`;
+    if (isHighlight) {
+      html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 30}" text-anchor="middle"
+        fill="${EV_COLOR}" font-weight="700">★ NB peak</text>`;
     }
   });
 
-  // Legend
-  html += `<rect x="${marginLeft}" y="${H - marginBottom + 38}" width="10" height="10" fill="${NS}" rx="2"/>`;
-  html += `<text class="chart-label" x="${marginLeft + 14}" y="${H - marginBottom + 47}">Northbridge City</text>`;
-  html += `<rect x="${marginLeft + 120}" y="${H - marginBottom + 38}" width="10" height="10" fill="${EV}" rx="2"/>`;
-  html += `<text class="chart-label" x="${marginLeft + 134}" y="${H - marginBottom + 47}">Eastvale United</text>`;
+  // Legend — bottom left
+  const legY = H - 14;
+  html += `<rect x="${marginLeft}" y="${legY - 9}" width="11" height="11" fill="${NB_COLOR}" rx="2"/>`;
+  html += `<text class="chart-label" x="${marginLeft + 15}" y="${legY}">Northbridge City</text>`;
+  html += `<rect x="${marginLeft + 138}" y="${legY - 9}" width="11" height="11" fill="${EV_COLOR}" rx="2"/>`;
+  html += `<text class="chart-label" x="${marginLeft + 153}" y="${legY}">Eastvale United</text>`;
 
   svg.innerHTML = html;
-  svg.setAttribute('viewBox', `0 0 ${W} ${H + 20}`);
-  svg.setAttribute('height', H + 20);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.setAttribute('height', H);
 })();
 
 // ── Top-5 Quick Links ─────────────────────────────────────────────────────────
@@ -552,14 +689,14 @@ function renderInspector({ possession, events }) {
 
   let html = `<div class="poss-detail-header">
     <span class="poss-id-badge">${p.possession_id}</span>
-    <span class="poss-meta" style="color:${teamColor};font-weight:700">${p.team_name}</span>
+    <span class="poss-meta" style="color:${teamColor};font-weight:700;border-color:${p.team === 'NB' ? 'var(--nb-dim)' : 'var(--ev-dim)'}">${p.team_name}</span>
     <span class="poss-meta">Period <span>${p.period}</span></span>
     <span class="poss-meta">Clock <span>${secondsToTime(parseFloat(p.start_clock_sec))}</span></span>
     <span class="poss-meta">Duration <span>${p.duration_sec}s</span></span>
     <span class="poss-meta">Events <span>${events.length}</span></span>
     <span class="poss-meta">Value <span>${p.possession_value}</span></span>
-    ${p.goal === 'True' ? '<span style="color:#2ea043;font-weight:700">⚽ GOAL</span>' : ''}
-    ${p.shot === 'True' && p.goal !== 'True' ? '<span style="color:var(--ev);font-weight:700">🎯 SHOT</span>' : ''}
+    ${p.goal === 'True' ? '<span style="color:var(--goal-green);font-weight:800;font-size:13px">⚽ GOAL</span>' : ''}
+    ${p.shot === 'True' && p.goal !== 'True' ? '<span style="color:var(--ev);font-weight:800;font-size:13px">🎯 SHOT</span>' : ''}
   </div>`;
 
   html += renderPitch(events, p);
@@ -621,7 +758,7 @@ function renderPitch(events, possession) {
   // Path line
   if (sortedEvts.length > 1) {
     const pts = sortedEvts.map(e => `${scaleX(e.x)},${scaleY(e.y)}`).join(' ');
-    const color = possession.team === 'NB' ? '#3b82f6' : '#f59e0b';
+    const color = possession.team === 'NB' ? '#4a9eff' : '#f0a030';
     html += `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.5" stroke-dasharray="3 2"/>`;
   }
 
@@ -638,10 +775,10 @@ function renderPitch(events, possession) {
   // Dots for each event
   sortedEvts.forEach((e, idx) => {
     const cx = scaleX(e.x), cy = scaleY(e.y);
-    let fill = '#58a6ff', r = 5;
+    let fill = '#4a9eff', r = 5;
     if (e.event_type === 'shot' || e.event_type === 'goal') { fill = '#fbbf24'; r = 7; }
     else if (e.event_type === 'tackle' || e.event_type === 'interception') { fill = '#f85149'; r = 5; }
-    else if (e.event_type === 'pass') { fill = '#58a6ff'; r = 5; }
+    else if (e.event_type === 'pass') { fill = '#4a9eff'; r = 5; }
     else if (e.event_type === 'dribble' || e.event_type === 'carry') { fill = '#34d399'; r = 5; }
     else if (e.event_type === 'kickoff' || e.event_type === 'goal_kick') { fill = '#a5b4fc'; r = 6; }
 

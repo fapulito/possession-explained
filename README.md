@@ -104,9 +104,9 @@ python -m agents.test_agents
 
 ### 5. UI
 ```bash
-python3 app/serve.py           # starts API + serves app/ on http://localhost:8000
+python3 app/serve.py           # starts API + serves app/ on http://localhost:8080
 ```
-Open `http://localhost:8000` in a browser. The page loads with no build step,
+Open `http://localhost:8080` in a browser. The page loads with no build step,
 no npm, no external CDN assets.
 
 ---
