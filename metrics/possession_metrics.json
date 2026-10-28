@@ -1,0 +1,332 @@
+{
+  "bottom5_possessions_by_value": [
+    {
+      "duration_sec": 4.9,
+      "end_reason": "incomplete_pass",
+      "goal": false,
+      "max_x": 39.7,
+      "period": 1,
+      "possession_id": "P0094",
+      "shot": false,
+      "start_clock_sec": 2060.4,
+      "start_x": 39.7,
+      "team": "EV",
+      "value": 0.0
+    },
+    {
+      "duration_sec": 5.6,
+      "end_reason": "foul",
+      "goal": false,
+      "max_x": 26.9,
+      "period": 2,
+      "possession_id": "P0183",
+      "shot": false,
+      "start_clock_sec": 1339.1,
+      "start_x": 26.9,
+      "team": "EV",
+      "value": 0.0
+    },
+    {
+      "duration_sec": 10.9,
+      "end_reason": "foul",
+      "goal": false,
+      "max_x": 4.6,
+      "period": 2,
+      "possession_id": "P0212",
+      "shot": false,
+      "start_clock_sec": 1964.6,
+      "start_x": 4.6,
+      "team": "NB",
+      "value": 0.0
+    },
+    {
+      "duration_sec": 7.0,
+      "end_reason": "incomplete_pass",
+      "goal": false,
+      "max_x": 100.0,
+      "period": 2,
+      "possession_id": "P0213",
+      "shot": false,
+      "start_clock_sec": 1981.0,
+      "start_x": 100.0,
+      "team": "EV",
+      "value": 0.0
+    },
+    {
+      "duration_sec": 6.1,
+      "end_reason": "interception",
+      "goal": false,
+      "max_x": 61.6,
+      "period": 2,
+      "possession_id": "P0229",
+      "shot": false,
+      "start_clock_sec": 2329.7,
+      "start_x": 61.6,
+      "team": "EV",
+      "value": 0.0
+    }
+  ],
+  "match_id": "SYNTH-001",
+  "method": "Possession % = share of possession-seconds. Windows by possession start.",
+  "note": "SYNTHETIC dataset (invented teams, simulated). Not real match data.",
+  "possession_pct_by_15min_window": {
+    "0-15": {
+      "EV": 31.76,
+      "NB": 68.24
+    },
+    "15-30": {
+      "EV": 31.95,
+      "NB": 68.05
+    },
+    "30-45": {
+      "EV": 37.22,
+      "NB": 62.78
+    },
+    "45-60": {
+      "EV": 40.56,
+      "NB": 59.44
+    },
+    "60-75": {
+      "EV": 30.93,
+      "NB": 69.07
+    },
+    "75-90": {
+      "EV": 36.77,
+      "NB": 63.23
+    },
+    "90-105": {
+      "EV": 20.47,
+      "NB": 79.53
+    }
+  },
+  "possession_pct_by_period": {
+    "1": {
+      "EV": 34.24,
+      "NB": 65.76
+    },
+    "2": {
+      "EV": 34.83,
+      "NB": 65.17
+    }
+  },
+  "possession_pct_by_team": {
+    "EV": 34.54,
+    "NB": 65.46
+  },
+  "synthetic": true,
+  "team_metrics": {
+    "EV": {
+      "avg_duration_sec": 11.99,
+      "avg_passes_per_possession": 2.57,
+      "directness_m_per_sec": 1.988,
+      "field_tilt_pct": 26.75,
+      "goals": 3,
+      "pct_ending_in_shot": 11.11,
+      "pct_reaching_final_third": 37.3,
+      "possession_seconds": 1511.2,
+      "possessions": 126,
+      "team_name": "Eastvale United"
+    },
+    "NB": {
+      "avg_duration_sec": 22.73,
+      "avg_passes_per_possession": 4.7,
+      "directness_m_per_sec": 1.087,
+      "field_tilt_pct": 73.25,
+      "goals": 4,
+      "pct_ending_in_shot": 16.67,
+      "pct_reaching_final_third": 63.49,
+      "possession_seconds": 2864.6,
+      "possessions": 126,
+      "team_name": "Northbridge City"
+    }
+  },
+  "top5_possessions_by_value": [
+    {
+      "duration_sec": 31.6,
+      "end_reason": "clearance",
+      "goal": false,
+      "max_x": 104.0,
+      "period": 2,
+      "possession_id": "P0197",
+      "shot": false,
+      "start_clock_sec": 1672.8,
+      "start_x": 2.0,
+      "team": "EV",
+      "value": 0.9788
+    },
+    {
+      "duration_sec": 50.2,
+      "end_reason": "clearance",
+      "goal": false,
+      "max_x": 104.0,
+      "period": 2,
+      "possession_id": "P0214",
+      "shot": false,
+      "start_clock_sec": 1992.0,
+      "start_x": 5.0,
+      "team": "NB",
+      "value": 0.9769
+    },
+    {
+      "duration_sec": 30.1,
+      "end_reason": "out_of_play",
+      "goal": false,
+      "max_x": 98.7,
+      "period": 2,
+      "possession_id": "P0223",
+      "shot": false,
+      "start_clock_sec": 2189.4,
+      "start_x": 2.0,
+      "team": "EV",
+      "value": 0.9697
+    },
+    {
+      "duration_sec": 21.1,
+      "end_reason": "goal",
+      "goal": true,
+      "max_x": 105.0,
+      "period": 2,
+      "possession_id": "P0163",
+      "shot": true,
+      "start_clock_sec": 842.8,
+      "start_x": 21.3,
+      "team": "EV",
+      "value": 0.952
+    },
+    {
+      "duration_sec": 45.2,
+      "end_reason": "incomplete_pass",
+      "goal": false,
+      "max_x": 104.0,
+      "period": 1,
+      "possession_id": "P0085",
+      "shot": false,
+      "start_clock_sec": 1815.0,
+      "start_x": 21.7,
+      "team": "NB",
+      "value": 0.9495
+    }
+  ],
+  "turnover_danger": [
+    {
+      "end_x": 29.3,
+      "goal": false,
+      "lost_possession_id": "P0002",
+      "resulting_shot_possession_id": "P0003",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 24.3,
+      "goal": true,
+      "lost_possession_id": "P0006",
+      "resulting_shot_possession_id": "P0007",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 22.0,
+      "goal": true,
+      "lost_possession_id": "P0011",
+      "resulting_shot_possession_id": "P0012",
+      "shooting_team": "EV",
+      "team": "NB"
+    },
+    {
+      "end_x": 2.7,
+      "goal": false,
+      "lost_possession_id": "P0018",
+      "resulting_shot_possession_id": "P0019",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 7.7,
+      "goal": false,
+      "lost_possession_id": "P0020",
+      "resulting_shot_possession_id": "P0021",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 26.6,
+      "goal": false,
+      "lost_possession_id": "P0026",
+      "resulting_shot_possession_id": "P0027",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 33.0,
+      "goal": false,
+      "lost_possession_id": "P0032",
+      "resulting_shot_possession_id": "P0033",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 5.5,
+      "goal": false,
+      "lost_possession_id": "P0066",
+      "resulting_shot_possession_id": "P0067",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 4.9,
+      "goal": false,
+      "lost_possession_id": "P0078",
+      "resulting_shot_possession_id": "P0079",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 15.3,
+      "goal": false,
+      "lost_possession_id": "P0089",
+      "resulting_shot_possession_id": "P0090",
+      "shooting_team": "EV",
+      "team": "NB"
+    },
+    {
+      "end_x": 21.0,
+      "goal": true,
+      "lost_possession_id": "P0117",
+      "resulting_shot_possession_id": "P0118",
+      "shooting_team": "EV",
+      "team": "NB"
+    },
+    {
+      "end_x": 7.0,
+      "goal": false,
+      "lost_possession_id": "P0130",
+      "resulting_shot_possession_id": "P0131",
+      "shooting_team": "EV",
+      "team": "NB"
+    },
+    {
+      "end_x": 15.9,
+      "goal": false,
+      "lost_possession_id": "P0200",
+      "resulting_shot_possession_id": "P0201",
+      "shooting_team": "EV",
+      "team": "NB"
+    },
+    {
+      "end_x": 19.8,
+      "goal": false,
+      "lost_possession_id": "P0217",
+      "resulting_shot_possession_id": "P0218",
+      "shooting_team": "NB",
+      "team": "EV"
+    },
+    {
+      "end_x": 3.7,
+      "goal": false,
+      "lost_possession_id": "P0247",
+      "resulting_shot_possession_id": "P0248",
+      "shooting_team": "NB",
+      "team": "EV"
+    }
+  ]
+}

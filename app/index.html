@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Possession, Explained</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1117;
+    --surface: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --nb: #3b82f6;
+    --ev: #f59e0b;
+    --accent: #58a6ff;
+    --danger: #f85149;
+  }
+
+  body {
+    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Layout ── */
+  .page { max-width: 960px; margin: 0 auto; padding: 0 16px 48px; }
+
+  /* ── Header ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 20px 0 16px;
+    margin-bottom: 24px;
+  }
+  header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+  header h1 span { color: var(--nb); }
+  .synthetic-badge {
+    display: inline-block;
+    margin-top: 4px;
+    background: #5a3e00;
+    border: 1px solid #f59e0b88;
+    color: var(--ev);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .card-title {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* ── Scoreboard ── */
+  .scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+    padding: 12px 0;
+  }
+  .team-name { font-size: 18px; font-weight: 700; }
+  .team-name.nb { color: var(--nb); }
+  .team-name.ev { color: var(--ev); }
+  .score { font-size: 48px; font-weight: 800; letter-spacing: -2px; }
+
+  /* ── Possession Bar ── */
+  .poss-bar-wrap { margin-top: 8px; }
+  .poss-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .poss-labels .nb { color: var(--nb); }
+  .poss-labels .ev { color: var(--ev); }
+  .bar-track {
+    height: 18px;
+    border-radius: 9px;
+    overflow: hidden;
+    background: var(--ev);
+    display: flex;
+  }
+  .bar-nb {
+    height: 100%;
+    background: var(--nb);
+    border-radius: 9px 0 0 9px;
+  }
+  .poss-method {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  /* ── Two-column stats ── */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 4px;
+  }
+  .stat-block { display: flex; flex-direction: column; gap: 4px; }
+  .stat-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-row { display: flex; justify-content: space-between; }
+  .stat-val { font-size: 15px; font-weight: 600; }
+  .stat-val.nb { color: var(--nb); }
+  .stat-val.ev { color: var(--ev); }
+
+  /* ── Chart ── */
+  .chart-wrap { width: 100%; overflow-x: auto; }
+  svg.bar-chart { display: block; }
+  .bar-nb-el { fill: var(--nb); }
+  .bar-ev-el { fill: var(--ev); }
+  .chart-label { font-size: 11px; fill: var(--muted); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+  .chart-val { font-size: 10px; fill: var(--text); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
+  .highlight-rect { fill: #ffffff10; stroke: #ffffff30; stroke-width: 1; }
+
+  /* ── Top-5 Quick Links ── */
+  .top5-links { display: flex; flex-wrap: wrap; gap: 8px; }
+  .poss-btn {
+    background: #1f2937;
+    border: 1px solid var(--border);
+    color: var(--accent);
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .poss-btn:hover, .poss-btn.active { background: #1d3a6e; border-color: var(--nb); }
+
+  /* ── Inspector ── */
+  .inspector-input-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .inspector-input {
+    flex: 1;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    font-family: monospace;
+  }
+  .inspector-input:focus { border-color: var(--accent); }
+  .go-btn {
+    background: var(--nb);
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .go-btn:hover { opacity: 0.85; }
+
+  .poss-detail-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .poss-id-badge {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: monospace;
+  }
+  .poss-meta { font-size: 12px; color: var(--muted); }
+  .poss-meta span { color: var(--text); }
+
+  /* ── SVG Pitch ── */
+  .pitch-wrap { width: 100%; overflow-x: auto; margin-bottom: 12px; }
+  svg.pitch {
+    display: block;
+    background: #1a3020;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+  }
+  .pitch-line { stroke: #ffffff40; stroke-width: 1; fill: none; }
+  .pitch-line-bold { stroke: #ffffff60; stroke-width: 1.5; fill: none; }
+  .event-dot { cursor: pointer; }
+  .event-tooltip {
+    position: fixed;
+    pointer-events: none;
+    background: #1e2a38;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: var(--text);
+    z-index: 100;
+    max-width: 220px;
+    line-height: 1.4;
+    display: none;
+  }
+
+  /* ── Events Table ── */
+  .events-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .events-table th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 600;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .events-table td { padding: 4px 8px; border-bottom: 1px solid #21262d; }
+  .events-table tr:last-child td { border-bottom: none; }
+  .ev-shot { color: var(--ev); font-weight: 600; }
+  .ev-goal { color: #2ea043; font-weight: 700; }
+  .ev-tackle { color: var(--danger); }
+
+  /* ── Agent Panel ── */
+  .agent-btns { display: flex; gap: 8px; margin-bottom: 12px; }
+  .agent-btn {
+    background: #21262d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    color: var(--text);
+    padding: 6px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .agent-btn:hover { background: #30363d; }
+  .agent-btn.running { opacity: 0.6; cursor: default; }
+
+  .question-row { display: flex; gap: 8px; margin-bottom: 12px; }
+  .question-input {
+    flex: 1;
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+  }
+  .question-input:focus { border-color: var(--accent); }
+  .ask-btn {
+    background: #1f6feb;
+    border: none;
+    border-radius: 6px;
+    padding: 7px 18px;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .ask-btn:hover { opacity: 0.85; }
+
+  .agent-output {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 14px;
+    white-space: pre-wrap;
+    font-size: 12.5px;
+    color: var(--text);
+    line-height: 1.65;
+    min-height: 80px;
+    display: none;
+  }
+  .agent-output.visible { display: block; }
+
+  /* Citations */
+  .citation { color: #58a6ff; font-weight: 600; }
+
+  /* Loading spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .empty-state { color: var(--muted); font-style: italic; font-size: 13px; }
+
+  /* ── Two-col layout ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) {
+    .two-col { grid-template-columns: 1fr; }
+    .scoreboard { flex-direction: column; gap: 4px; }
+    .score { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <header>
+    <h1><span>Possession,</span> Explained</h1>
+    <div class="synthetic-badge">⚠ SYNTHETIC dataset — invented teams, not real match data</div>
+  </header>
+
+  <!-- Scoreboard + Possession Bar -->
+  <div class="card">
+    <div class="card-title">Match Result · SYNTH-001</div>
+    <div class="scoreboard">
+      <div class="team-name nb">Northbridge City</div>
+      <div class="score">4 – 3</div>
+      <div class="team-name ev">Eastvale United</div>
+    </div>
+    <div class="poss-bar-wrap" style="margin-top:20px;">
+      <div class="poss-labels">
+        <span class="nb">65.46%</span>
+        <span style="font-size:12px;color:var(--muted);align-self:center;">possession</span>
+        <span class="ev">34.54%</span>
+      </div>
+      <div class="bar-track">
+        <div class="bar-nb" style="width:65.46%"></div>
+      </div>
+      <div class="poss-method">Possession % = share of possession-seconds, not event counts.</div>
+    </div>
+  </div>
+
+  <!-- Possession by 15-min Window Chart -->
+  <div class="card">
+    <div class="card-title">Possession by 15-Minute Window</div>
+    <div class="chart-wrap">
+      <svg id="windowChart" class="bar-chart" viewBox="0 0 900 220" width="900" height="220"></svg>
+    </div>
+  </div>
+
+  <!-- Field Tilt + Directness -->
+  <div class="two-col">
+    <div class="card">
+      <div class="card-title">Field Tilt (Final-Third Share)</div>
+      <div class="stats-grid">
+        <div class="stat-block">
+          <div class="stat-label">Northbridge City</div>
+          <div class="stat-val nb">73.25%</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Eastvale United</div>
+          <div class="stat-val ev">26.75%</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Directness (m/s of possession)</div>
+      <div class="stats-grid">
+        <div class="stat-block">
+          <div class="stat-label">Northbridge City</div>
+          <div class="stat-val nb">1.087 m/s</div>
+        </div>
+        <div class="stat-block">
+          <div class="stat-label">Eastvale United</div>
+          <div class="stat-val ev">1.988 m/s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Possession Inspector -->
+  <div class="card">
+    <div class="card-title">Possession Inspector</div>
+
+    <div class="top5-links" id="top5Links"></div>
+
+    <div class="inspector-input-row" style="margin-top:12px;">
+      <input class="inspector-input" id="possInput" type="text" placeholder="e.g. P0197" spellcheck="false" />
+      <button class="go-btn" onclick="loadPossession()">Inspect</button>
+    </div>
+
+    <div id="inspectorResult">
+      <div class="empty-state">Select a possession above or type a possession_id to inspect it.</div>
+    </div>
+  </div>
+
+  <!-- Agent Panel -->
+  <div class="card">
+    <div class="card-title">Agent Panel</div>
+
+    <div class="agent-btns">
+      <button class="agent-btn" id="narrativeBtn" onclick="runNarrative()">📖 Narrative</button>
+      <button class="agent-btn" id="recapBtn" onclick="runRecap()">🏁 Recap</button>
+    </div>
+
+    <div class="question-row">
+      <input class="question-input" id="questionInput" type="text"
+        placeholder="Ask the Analyst agent… e.g. 'Why did Northbridge City dominate 90-105?'" />
+      <button class="ask-btn" onclick="askAnalyst()">Ask</button>
+    </div>
+
+    <div class="agent-output" id="agentOutput"></div>
+  </div>
+
+</div>
+
+<!-- Tooltip -->
+<div class="event-tooltip" id="tooltip"></div>
+
+<script>
+// ── Config ──────────────────────────────────────────────────────────────────
+const API = '';  // same origin
+
+// ── Window Chart ─────────────────────────────────────────────────────────────
+(function drawWindowChart() {
+  const windows = [
+    { label: '0-15',   NB: 68.24, EV: 31.76 },
+    { label: '15-30',  NB: 68.05, EV: 31.95 },
+    { label: '30-45',  NB: 62.78, EV: 37.22 },
+    { label: '45-60',  NB: 59.44, EV: 40.56 },
+    { label: '60-75',  NB: 69.07, EV: 30.93 },
+    { label: '75-90',  NB: 63.23, EV: 36.77 },
+    { label: '90-105', NB: 79.53, EV: 20.47 },
+  ];
+
+  const svg = document.getElementById('windowChart');
+  const W = 900, H = 220;
+  const marginLeft = 44, marginRight = 16, marginTop = 12, marginBottom = 32;
+  const chartW = W - marginLeft - marginRight;
+  const chartH = H - marginTop - marginBottom;
+  const n = windows.length;
+  const groupW = chartW / n;
+  const barW = Math.floor(groupW * 0.36);
+  const gap = Math.floor(groupW * 0.06);
+  const NS = '#3b82f6', EV = '#f59e0b';
+
+  let html = '';
+
+  // Y axis guides
+  for (let pct = 0; pct <= 100; pct += 25) {
+    const y = marginTop + chartH - (pct / 100) * chartH;
+    html += `<line x1="${marginLeft}" y1="${y}" x2="${W - marginRight}" y2="${y}" stroke="#30363d" stroke-width="0.5"/>`;
+    html += `<text x="${marginLeft - 4}" y="${y + 4}" text-anchor="end" class="chart-label">${pct}</text>`;
+  }
+
+  windows.forEach((w, i) => {
+    const x0 = marginLeft + i * groupW + gap;
+    const nbH = (w.NB / 100) * chartH;
+    const evH = (w.EV / 100) * chartH;
+    const nbY = marginTop + chartH - nbH;
+    const evY = marginTop + chartH - evH;
+
+    // Highlight 90-105
+    if (w.label === '90-105') {
+      html += `<rect class="highlight-rect" x="${x0 - gap * 0.5}" y="${marginTop}"
+        width="${groupW}" height="${chartH}" rx="3"/>`;
+    }
+
+    // NB bar
+    html += `<rect class="bar-nb-el" x="${x0}" y="${nbY}" width="${barW}" height="${nbH}" rx="2"/>`;
+    html += `<text class="chart-val" x="${x0 + barW / 2}" y="${nbY - 3}" text-anchor="middle">${w.NB.toFixed(1)}</text>`;
+
+    // EV bar
+    const evX = x0 + barW + gap;
+    html += `<rect class="bar-ev-el" x="${evX}" y="${evY}" width="${barW}" height="${evH}" rx="2"/>`;
+    html += `<text class="chart-val" x="${evX + barW / 2}" y="${evY - 3}" text-anchor="middle">${w.EV.toFixed(1)}</text>`;
+
+    // label
+    const labelX = x0 + barW + gap / 2;
+    html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 14}" text-anchor="middle">${w.label}</text>`;
+    if (w.label === '90-105') {
+      html += `<text class="chart-label" x="${labelX}" y="${H - marginBottom + 25}" text-anchor="middle" fill="#f59e0b">★ NB peak</text>`;
+    }
+  });
+
+  // Legend
+  html += `<rect x="${marginLeft}" y="${H - marginBottom + 38}" width="10" height="10" fill="${NS}" rx="2"/>`;
+  html += `<text class="chart-label" x="${marginLeft + 14}" y="${H - marginBottom + 47}">Northbridge City</text>`;
+  html += `<rect x="${marginLeft + 120}" y="${H - marginBottom + 38}" width="10" height="10" fill="${EV}" rx="2"/>`;
+  html += `<text class="chart-label" x="${marginLeft + 134}" y="${H - marginBottom + 47}">Eastvale United</text>`;
+
+  svg.innerHTML = html;
+  svg.setAttribute('viewBox', `0 0 ${W} ${H + 20}`);
+  svg.setAttribute('height', H + 20);
+})();
+
+// ── Top-5 Quick Links ─────────────────────────────────────────────────────────
+const TOP5 = [
+  { possession_id: 'P0197', value: 0.9788 },
+  { possession_id: 'P0214', value: 0.9769 },
+  { possession_id: 'P0223', value: 0.9697 },
+  { possession_id: 'P0163', value: 0.9520 },
+  { possession_id: 'P0085', value: 0.9495 },
+];
+
+(function renderTop5() {
+  const container = document.getElementById('top5Links');
+  TOP5.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'poss-btn';
+    btn.dataset.id = p.possession_id;
+    btn.textContent = `${p.possession_id} (${p.value})`;
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.poss-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('possInput').value = p.possession_id;
+      loadPossession(p.possession_id);
+    });
+    container.appendChild(btn);
+  });
+})();
+
+// ── Possession Inspector ──────────────────────────────────────────────────────
+async function loadPossession(id) {
+  const pid = id || document.getElementById('possInput').value.trim().toUpperCase();
+  if (!pid) return;
+  document.getElementById('possInput').value = pid;
+
+  const result = document.getElementById('inspectorResult');
+  result.innerHTML = `<span class="spinner"></span> Loading ${pid}…`;
+
+  try {
+    const resp = await fetch(`${API}/api/possessions/${pid}`);
+    if (!resp.ok) {
+      const err = await resp.json();
+      result.innerHTML = `<div style="color:var(--danger)">${err.error || 'Not found'}</div>`;
+      return;
+    }
+    const data = await resp.json();
+    renderInspector(data);
+  } catch (e) {
+    result.innerHTML = `<div style="color:var(--danger)">Failed to load: ${e.message}</div>`;
+  }
+}
+
+function renderInspector({ possession, events }) {
+  const p = possession;
+  const teamColor = p.team === 'NB' ? 'var(--nb)' : 'var(--ev)';
+
+  let html = `<div class="poss-detail-header">
+    <span class="poss-id-badge">${p.possession_id}</span>
+    <span class="poss-meta" style="color:${teamColor};font-weight:700">${p.team_name}</span>
+    <span class="poss-meta">Period <span>${p.period}</span></span>
+    <span class="poss-meta">Clock <span>${secondsToTime(parseFloat(p.start_clock_sec))}</span></span>
+    <span class="poss-meta">Duration <span>${p.duration_sec}s</span></span>
+    <span class="poss-meta">Events <span>${events.length}</span></span>
+    <span class="poss-meta">Value <span>${p.possession_value}</span></span>
+    ${p.goal === 'True' ? '<span style="color:#2ea043;font-weight:700">⚽ GOAL</span>' : ''}
+    ${p.shot === 'True' && p.goal !== 'True' ? '<span style="color:var(--ev);font-weight:700">🎯 SHOT</span>' : ''}
+  </div>`;
+
+  html += renderPitch(events, p);
+  html += renderEventsTable(events);
+
+  document.getElementById('inspectorResult').innerHTML = html;
+  attachTooltips();
+}
+
+function secondsToTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = (s % 60).toFixed(1);
+  return `${m}:${sec.padStart(4, '0')}`;
+}
+
+// ── SVG Pitch ─────────────────────────────────────────────────────────────────
+function renderPitch(events, possession) {
+  // Pitch: 105m x 68m, displayed at scale
+  const PW = 840, PH = 340;
+  const scaleX = x => (parseFloat(x) / 105) * PW;
+  const scaleY = y => (parseFloat(y) / 68) * PH;
+
+  let html = `<div class="pitch-wrap"><svg class="pitch" viewBox="0 0 ${PW} ${PH}" width="${PW}" height="${PH}">`;
+
+  // Pitch markings
+  // Outline
+  html += `<rect x="0" y="0" width="${PW}" height="${PH}" fill="#1a3020"/>`;
+  html += `<rect x="1" y="1" width="${PW-2}" height="${PH-2}" class="pitch-line-bold"/>`;
+
+  // Centre line
+  html += `<line x1="${PW/2}" y1="0" x2="${PW/2}" y2="${PH}" class="pitch-line"/>`;
+  // Centre circle
+  const cr = (9.15 / 105) * PW;
+  html += `<circle cx="${PW/2}" cy="${PH/2}" r="${cr}" class="pitch-line"/>`;
+  html += `<circle cx="${PW/2}" cy="${PH/2}" r="2" fill="#ffffff40"/>`;
+
+  // Final third lines (at 70m and 35m from left = 35m from right)
+  const x35 = scaleX(35);
+  const x70 = scaleX(70);
+  html += `<line x1="${x35}" y1="0" x2="${x35}" y2="${PH}" class="pitch-line" stroke-dasharray="4 3"/>`;
+  html += `<line x1="${x70}" y1="0" x2="${x70}" y2="${PH}" class="pitch-line" stroke-dasharray="4 3"/>`;
+
+  // Penalty areas (16.5m deep, 40.32m wide centred)
+  const paTop = scaleY((68 - 40.32) / 2);
+  const paBot = scaleY((68 + 40.32) / 2);
+  const paDepth = scaleX(16.5);
+  html += `<rect x="0" y="${paTop}" width="${paDepth}" height="${paBot - paTop}" class="pitch-line"/>`;
+  html += `<rect x="${PW - paDepth}" y="${paTop}" width="${paDepth}" height="${paBot - paTop}" class="pitch-line"/>`;
+
+  // Goals
+  const goalTop = scaleY((68 - 7.32) / 2);
+  const goalBot = scaleY((68 + 7.32) / 2);
+  html += `<rect x="${-4}" y="${goalTop}" width="4" height="${goalBot - goalTop}" fill="#ffffff20" stroke="#ffffff40" stroke-width="1"/>`;
+  html += `<rect x="${PW}" y="${goalTop}" width="4" height="${goalBot - goalTop}" fill="#ffffff20" stroke="#ffffff40" stroke-width="1"/>`;
+
+  // Draw event paths
+  const sortedEvts = [...events].sort((a, b) => parseFloat(a.clock_sec) - parseFloat(b.clock_sec));
+
+  // Path line
+  if (sortedEvts.length > 1) {
+    const pts = sortedEvts.map(e => `${scaleX(e.x)},${scaleY(e.y)}`).join(' ');
+    const color = possession.team === 'NB' ? '#3b82f6' : '#f59e0b';
+    html += `<polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.5" opacity="0.5" stroke-dasharray="3 2"/>`;
+  }
+
+  // Draw arrows for pass/carry (end_x/end_y)
+  sortedEvts.forEach(e => {
+    if (['pass', 'carry'].includes(e.event_type) && e.end_x && e.end_y) {
+      const x1 = scaleX(e.x), y1 = scaleY(e.y);
+      const x2 = scaleX(e.end_x), y2 = scaleY(e.end_y);
+      const color = e.outcome === 'complete' ? '#ffffff30' : '#f8514940';
+      html += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="1"/>`;
+    }
+  });
+
+  // Dots for each event
+  sortedEvts.forEach((e, idx) => {
+    const cx = scaleX(e.x), cy = scaleY(e.y);
+    let fill = '#58a6ff', r = 5;
+    if (e.event_type === 'shot' || e.event_type === 'goal') { fill = '#fbbf24'; r = 7; }
+    else if (e.event_type === 'tackle' || e.event_type === 'interception') { fill = '#f85149'; r = 5; }
+    else if (e.event_type === 'pass') { fill = '#58a6ff'; r = 5; }
+    else if (e.event_type === 'dribble' || e.event_type === 'carry') { fill = '#34d399'; r = 5; }
+    else if (e.event_type === 'kickoff' || e.event_type === 'goal_kick') { fill = '#a5b4fc'; r = 6; }
+
+    const meta = JSON.stringify({ event_id: e.event_id, type: e.event_type, t: e.clock_sec, x: e.x, y: e.y, outcome: e.outcome }).replace(/"/g, '&quot;');
+    html += `<circle class="event-dot" cx="${cx}" cy="${cy}" r="${r}" fill="${fill}" opacity="0.9"
+      data-meta="${meta}" data-idx="${idx}">
+      <title>${e.event_id} · ${e.event_type} · t=${e.clock_sec}s</title>
+    </circle>`;
+
+    // Sequence number
+    html += `<text x="${cx + r + 1}" y="${cy - r}" font-size="8" fill="#ffffff80"
+      font-family="-apple-system,sans-serif">${idx + 1}</text>`;
+  });
+
+  html += `</svg></div>`;
+  return html;
+}
+
+function attachTooltips() {
+  const tooltip = document.getElementById('tooltip');
+  document.querySelectorAll('.event-dot').forEach(dot => {
+    dot.addEventListener('mousemove', e => {
+      const meta = JSON.parse(dot.dataset.meta.replace(/&quot;/g, '"'));
+      tooltip.style.display = 'block';
+      tooltip.style.left = (e.clientX + 12) + 'px';
+      tooltip.style.top = (e.clientY - 8) + 'px';
+      tooltip.innerHTML = `<strong>${meta.event_id}</strong> · ${meta.type}<br>
+        t = ${meta.t}s &nbsp; (${meta.x}, ${meta.y})<br>
+        outcome: ${meta.outcome}`;
+    });
+    dot.addEventListener('mouseleave', () => {
+      tooltip.style.display = 'none';
+    });
+  });
+}
+
+function renderEventsTable(events) {
+  const sorted = [...events].sort((a, b) => parseFloat(a.clock_sec) - parseFloat(b.clock_sec));
+
+  let rows = sorted.map(e => {
+    let typeClass = '';
+    if (e.event_type === 'shot') typeClass = 'ev-shot';
+    else if (e.event_type === 'goal') typeClass = 'ev-goal';
+    else if (e.event_type === 'tackle' || e.event_type === 'interception') typeClass = 'ev-tackle';
+
+    const pressure = e.pressure_flag === 'True' ? '⚠' : '';
+    return `<tr>
+      <td style="font-family:monospace">${e.event_id}</td>
+      <td>${secondsToTime(parseFloat(e.clock_sec))}</td>
+      <td class="${typeClass}">${e.event_type}</td>
+      <td>${e.player_id || '–'}</td>
+      <td>(${parseFloat(e.x).toFixed(1)}, ${parseFloat(e.y).toFixed(1)})</td>
+      <td>${e.outcome}</td>
+      <td>${pressure}</td>
+    </tr>`;
+  }).join('');
+
+  return `<div style="overflow-x:auto;margin-top:4px;">
+    <table class="events-table">
+      <thead><tr>
+        <th>Event ID</th><th>Clock</th><th>Type</th><th>Player</th><th>Position</th><th>Outcome</th><th>Press</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <div style="font-size:11px;color:var(--muted);margin-top:6px;">${events.length} events total</div>
+  </div>`;
+}
+
+// ── Agent Panel ───────────────────────────────────────────────────────────────
+function showOutput(html, raw) {
+  const el = document.getElementById('agentOutput');
+  el.className = 'agent-output visible';
+  el.innerHTML = html;
+}
+
+function formatAgentText(text) {
+  // Highlight [PID] citations
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/\[([A-Z0-9]+(?:–[A-Z0-9]+)?)\]/g, '<span class="citation">[$1]</span>');
+}
+
+async function runNarrative() {
+  const btn = document.getElementById('narrativeBtn');
+  btn.classList.add('running');
+  btn.textContent = '⏳ Loading…';
+  showOutput('<span class="spinner"></span> Running Narrative agent…');
+  try {
+    const resp = await fetch(`${API}/api/agents/narrative`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    showOutput(formatAgentText(data.result));
+  } catch (e) {
+    showOutput(`<span style="color:var(--danger)">Error: ${e.message}</span>`);
+  } finally {
+    btn.classList.remove('running');
+    btn.textContent = '📖 Narrative';
+  }
+}
+
+async function runRecap() {
+  const btn = document.getElementById('recapBtn');
+  btn.classList.add('running');
+  btn.textContent = '⏳ Loading…';
+  showOutput('<span class="spinner"></span> Running Recap agent…');
+  try {
+    const resp = await fetch(`${API}/api/agents/recap`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    showOutput(formatAgentText(data.result));
+  } catch (e) {
+    showOutput(`<span style="color:var(--danger)">Error: ${e.message}</span>`);
+  } finally {
+    btn.classList.remove('running');
+    btn.textContent = '🏁 Recap';
+  }
+}
+
+async function askAnalyst() {
+  const q = document.getElementById('questionInput').value.trim();
+  if (!q) return;
+  showOutput('<span class="spinner"></span> Asking Analyst…');
+  try {
+    const resp = await fetch(`${API}/api/agents/analyst?q=${encodeURIComponent(q)}`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    showOutput(formatAgentText(data.result));
+  } catch (e) {
+    showOutput(`<span style="color:var(--danger)">Error: ${e.message}</span>`);
+  }
+}
+
+// Enter key for analyst question
+document.getElementById('questionInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') askAnalyst();
+});
+
+// Enter key for possession input
+document.getElementById('possInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') loadPossession();
+});
+</script>
+</body>
+</html>
