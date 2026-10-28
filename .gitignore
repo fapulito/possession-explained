@@ -1,3 +1,9 @@
 __pycache__/
 *.pyc
 .env
+
+
+# Ziggy Suggested 10/27/26
+session-*.md
+session-*.zip
+bob-spec-possession-agents/
