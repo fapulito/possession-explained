@@ -201,7 +201,7 @@
 
   /* ── Chart ── */
   .chart-wrap { width: 100%; overflow-x: auto; }
-  svg.bar-chart { display: block; }
+  svg.bar-chart { display: block; width: 100%; height: auto; }
   .bar-nb-el { fill: var(--nb); }
   .bar-ev-el { fill: var(--ev); }
   .chart-label { font-size: 11px; fill: var(--muted); font-family: -apple-system, "Segoe UI", system-ui, sans-serif; }
@@ -478,7 +478,7 @@
   <div class="card">
     <div class="card-title">Possession by 15-Minute Window</div>
     <div class="chart-wrap">
-      <svg id="windowChart" class="bar-chart" viewBox="0 0 1040 260" width="1040" height="260"></svg>
+      <svg id="windowChart" class="bar-chart" viewBox="0 0 1040 260"></svg>
     </div>
   </div>
 
@@ -631,7 +631,6 @@ const API = '';  // same origin
 
   svg.innerHTML = html;
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-  svg.setAttribute('height', H);
 })();
 
 // ── Top-5 Quick Links ─────────────────────────────────────────────────────────
