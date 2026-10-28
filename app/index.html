@@ -286,9 +286,11 @@
   .poss-meta span { color: var(--text); font-weight: 600; }
 
   /* ── SVG Pitch ── */
-  .pitch-wrap { width: 100%; overflow-x: auto; margin-bottom: 14px; }
+  .pitch-wrap { width: 100%; overflow-x: hidden; margin-bottom: 14px; }
   svg.pitch {
     display: block;
+    width: 100%;
+    height: auto;
     background: #1a3020;
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -718,7 +720,7 @@ function renderPitch(events, possession) {
   const scaleX = x => (parseFloat(x) / 105) * PW;
   const scaleY = y => (parseFloat(y) / 68) * PH;
 
-  let html = `<div class="pitch-wrap"><svg class="pitch" viewBox="0 0 ${PW} ${PH}" width="${PW}" height="${PH}">`;
+  let html = `<div class="pitch-wrap"><svg class="pitch" viewBox="0 0 ${PW} ${PH}">`;
 
   // Pitch markings
   // Outline
